@@ -85,14 +85,16 @@ class Mesh():
 
         return string
 
-    def add_mesh_object(self, name = "", type = None, **kwargs):
+    def add_mesh_object(self, name="", mesh_type=None, **kwargs):
         if name in self.mesh_objects.keys():
-            print (f'name {name} already in use')
+            print(f'name {name} already in use')
 
-        if type == MeshObjectTypes.FileMeshGenerator:
+        if mesh_type == MeshObjectTypes.FileMeshGenerator:
             mesh = FileMeshGenerator(name=name, **kwargs)
-        elif type == MeshObjectTypes.TransformGenerator:
+        elif mesh_type == MeshObjectTypes.TransformGenerator:
             mesh = TransformGenerator(name=name, **kwargs)
-        
+        else:
+            raise ValueError(f'Invalid mesh object type: {mesh_type}')
+
         self.mesh_objects[name] = mesh
         

@@ -55,8 +55,8 @@ class Variables():
         self.name = "Variables"
         self.variables = {}
 
-    def add_variable(self, name, order, family, block="", initial_condition=""):
-        variable = Variable(name=name, order=order, family=family, block=block, initial_condition=initial_condition)
+    def add_variable(self, name, **kwargs):
+        variable = Variable(name=name, **kwargs)
         if variable.name in self.variables.keys():
             print("variable name already in use")
             

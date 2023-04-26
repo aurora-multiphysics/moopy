@@ -235,15 +235,15 @@ class AuxKernels(Kernels):
         super().__init__()
         self.name = 'AuxKernels'
     
-    def add_kernel(self, name, type, variable, block, **kwargs):
+    def add_kernel(self, name, kernel_type, variable, block, **kwargs):
         if name in self.kernels.keys():
             print(f'aux kernel name {name} already in use')
 
-        if type == AuxKernelTypes.ParsedAux:
+        if kernel_type == AuxKernelTypes.ParsedAux:
             kernel = ParsedAux(name,variable,block, **kwargs)
-        elif type == AuxKernelTypes.ADRankTwoAux:
+        elif kernel_type == AuxKernelTypes.ADRankTwoAux:
             kernel = ADRankTwoAux(name,variable,block, **kwargs)
-        elif type == AuxKernelTypes.ADRankTwoScalarAux:
+        elif kernel_type == AuxKernelTypes.ADRankTwoScalarAux:
             kernel = ADRankTwoScalarAux(name,variable,block, **kwargs)
 
         self.kernels[name] = kernel  

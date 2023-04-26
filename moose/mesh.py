@@ -18,23 +18,28 @@ class MeshObject():
         self.name = name
 
 class FileMeshGenerator(MeshObject):
-    def __init__(self, name = "", **kwargs):
+    def __init__(self, name="", **kwargs):
         super().__init__(name, **kwargs)
         self.mesh_object_type = MeshObjectTypes.FileMeshGenerator
         self.filename = kwargs.pop('filename')
         self.clear_spline_nodes = False
+        self.show_info = False
         if 'clear_spline_nodes' in kwargs.keys():
             self.clear_spline_nodes = True
-    
+        if 'show_info' in kwargs.keys():
+            self.show_info = True
+
     def __str__(self):
-        string  = f'[{self.name}]\n'
+        string = f'[{self.name}]\n'
         string += f'type={self.mesh_object_type.name}\n'
         string += f'file={self.filename}\n'
         if self.clear_spline_nodes:
             string += 'clear_spline_nodes=true\n'
+        if self.show_info:
+            string += 'show_info=true\n'
         string += '[]\n'
         return string
-
+        
 class TransformGenerator(MeshObject):
 
     def __init__(self, name = "", **kwargs):

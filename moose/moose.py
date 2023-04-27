@@ -45,6 +45,7 @@ class MOOSEInput():
         file = open(filename,'w')
         # first the mesh block
         if self.mesh: file.write(indent(self.mesh.__str__()))
+        if self.problem: file.write(indent(self.problem.__str__()))
         if self.global_params: file.write(indent(self.global_params.__str__()))
         if self.variables: file.write(indent(self.variables.__str__()))
         if self.aux_variables: file.write(indent(self.aux_variables.__str__()))

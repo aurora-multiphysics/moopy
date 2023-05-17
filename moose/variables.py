@@ -27,33 +27,36 @@ class Family(IntEnum):
     RATIONAL_BERNSTEIN = auto()
     SIDE_HIERARCHIC = auto()
     
-class Variable():
-    def __init__(self, name = "", order = 1, family = 1, block = ""):
+class Variable:
+    def __init__(self, name, order=None, **kwargs):
         self.name = name
-        self.order = Order(order)
-        self.family = Family(family)
-        self.block = block
+        self.order = order
+        self.kwargs = kwargs
 
     def __str__(self):
         string = f'[{self.name}]\n'
-        string += f'order = {self.order.name}\n'
-        string += f'family = {self.family.name}\n'
-        if self.block:
-            string += f'block = "{self.block}"\n'
+        if self.order is not None:
+            string += f'order = {Order(self.order).name}\n'
+        if 'family' in self.kwargs:
+            string += f'family = {self.kwargs["family"].name}\n'
+        if 'initial_condition' in self.kwargs:
+            string += f'initial_condition = "{self.kwargs["initial_condition"]}"\n'
+        if 'block' in self.kwargs and self.kwargs['block'] is not None:
+            string += f'block = "{self.kwargs["block"]}"\n'
         string += f'[]\n'
         return string
 
 class AuxVariable(Variable):
-    def __init__(self, name = "", order = 1, family = 1, block = ""):
-        super().__init__(name,order,family,block)
+    def __init__(self, name="",**kwargs):
+        super().__init__(name, order, family, block, initial_condition)
 
 class Variables():
     def __init__(self):
         self.name = "Variables"
         self.variables = {}
 
-    def add_variable(self, name, order, family, block):
-        variable = Variable(name=name,order=order,family=family,block=block)
+    def add_variable(self, name, order=None, **kwargs):
+        variable = Variable(name=name, order=order, **kwargs)
         if variable.name in self.variables.keys():
             print("variable name already in use")
             

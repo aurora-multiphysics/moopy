@@ -156,9 +156,9 @@ class ADGenericFunctionMaterial(Material):
         string =  f'[{self.name}]\n'
         string += f'type={self.material_type.name}\n'
         prop_names = ' '.join(self.prop_names)
-        string += f'prop_names={prop_names}\n'
+        string += f'prop_names=\'{prop_names}\'\n'
         prop_values = ' '.join([x.name for x in self.prop_values])
-        string += f'prop_values={prop_values}\n'
+        string += f'prop_values=\'{prop_values}\'\n'
         if self.block:
             string += f'block="{self.block}"\n'
         string += '[]\n'

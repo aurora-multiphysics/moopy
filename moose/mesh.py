@@ -93,11 +93,14 @@ class Mesh():
     def add_mesh_object(self, name = "", type = None, **kwargs):
         if name in self.mesh_objects.keys():
             print (f'name {name} already in use')
-
+            
+        mesh = None  # Add a default value for the 'mesh' variable
+        
         if type == MeshObjectTypes.FileMeshGenerator:
             mesh = FileMeshGenerator(name=name, **kwargs)
         elif type == MeshObjectTypes.TransformGenerator:
             mesh = TransformGenerator(name=name, **kwargs)
         
-        self.mesh_objects[name] = mesh
+        if mesh is not None:
+            self.mesh_objects[name] = mesh
         

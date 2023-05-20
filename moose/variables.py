@@ -27,27 +27,29 @@ class Family(IntEnum):
     RATIONAL_BERNSTEIN = auto()
     SIDE_HIERARCHIC = auto()
     
-class Variable:
-    def __init__(self, name, order=None, **kwargs):
+class Variable():
+    def __init__(self, name="", order=None, family=None, block="", initial_condition=""):
         self.name = name
-        self.order = order
-        self.kwargs = kwargs
+        self.order = Order(order) if order is not None else None
+        self.family = Family(family) if family is not None else None
+        self.block = block
+        self.initial_condition = initial_condition
 
     def __str__(self):
         string = f'[{self.name}]\n'
-        if self.order is not None:
-            string += f'order = {Order(self.order).name}\n'
-        if 'family' in self.kwargs:
-            string += f'family = {self.kwargs["family"].name}\n'
-        if 'initial_condition' in self.kwargs:
-            string += f'initial_condition = "{self.kwargs["initial_condition"]}"\n'
-        if 'block' in self.kwargs and self.kwargs['block'] is not None:
-            string += f'block = "{self.kwargs["block"]}"\n'
-        string += f'[]\n'
+        if self.order:
+            string += f'order = {self.order.name}\n'
+        if self.family:
+            string += f'family = {self.family.name}\n'
+        if self.initial_condition:
+            string += f'initial_condition = "{self.initial_condition}"\n'
+        if self.block:
+            string += f'block = "{self.block}"\n'
+        string += '[]\n'
         return string
-
+        
 class AuxVariable(Variable):
-    def __init__(self, name="",**kwargs):
+    def __init__(self, name="", order=None, family=None, block="", initial_condition=""):
         super().__init__(name, order, family, block, initial_condition)
 
 class Variables():
@@ -55,8 +57,8 @@ class Variables():
         self.name = "Variables"
         self.variables = {}
 
-    def add_variable(self, name, order=None, **kwargs):
-        variable = Variable(name=name, order=order, **kwargs)
+    def add_variable(self, name, order=None, family=None, block="", initial_condition=""):
+        variable = Variable(name=name, order=order, family=family, block=block, initial_condition=initial_condition)
         if variable.name in self.variables.keys():
             print("variable name already in use")
             

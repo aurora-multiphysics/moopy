@@ -1,11 +1,13 @@
 #!/usr/env/python3
 
 from enum import IntEnum, auto
-from moose.variables import Variable
+from variables import Variable
 
 class MooseFunctionTypes(IntEnum):
     PiecewiseLinear = auto()
     ParsedFunction = auto()
+    VariableFunction = auto()
+    PiecewiseMultilinear = auto()
 
 class PiecewiseFunction:
     def __init__(self, name = "", x_data = None, y_data = None):
@@ -64,6 +66,21 @@ class PolynomialFunction:
 class GenericFunction:
     def __init__(self, name = ""):
         self.name = name
+        
+        
+class VariableFunction:
+    def __init__(self, name = "", **kwargs):
+        self.name = name
+        self.type = MooseFunctionTypes.VariableFunction
+        if 'uoname' in kwargs.keys():
+            self.uoname = kwargs['uoname']
+    def __str__(self):
+        string = f'[{self.name}]\n'
+        string += f'type={self.type.name}\n'
+        string += f'uoname="{self.uoname}"\n'
+        string += '[]\n'
+        return string
+
 
 class ParsedFunction(GenericFunction):
     def __init__(self,name = "", function = None):
@@ -95,6 +112,20 @@ class PiecewiseLinear(GenericFunction):
         
         return string
 
+class PiecewiseMultilinear(GenericFunction):
+    def __init__(self,name = "", data_file = ""):
+        super().__init__(name)
+        self.type = MooseFunctionTypes.PiecewiseMultilinear
+        self.data_file = data_file
+        
+    def __str__(self):
+        string = f'[{self.name}]\n'
+        string += f'type={ self.type.name}\n'
+        string += f'data_file="{ self.data_file}"\n'
+        string += '[]\n'
+        return string
+        
+
 class Functions:
     def __init__(self):
         self.name = "Functions"
@@ -106,5 +137,3 @@ class Functions:
             string += self.functions[func].__str__()
         string += "[]\n"
         return string
-
-    

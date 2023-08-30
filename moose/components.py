@@ -144,6 +144,22 @@ class Outlet1Phase(Component):
         self.p = pressure
         self.type = ComponentType.Outlet1Phase
 
+class VolumeJunction1Phase(Component):
+    def __init__(self, name, connections, volume, position, **kwargs):
+        super().__init__(name, **kwargs)
+        self.name = name
+        self.volume = volume
+        self.position = position
+        self.connections = connections
+        self.type = ComponentType.VolumeJunction1Phase
+
+class JunctionOneToOne1Phase(Component):
+    def __init__(self, name, connections, **kwargs):
+        super().__init__(name, **kwargs)
+        self.name = name
+        self.connections = connections
+        self.type = ComponentType.JunctionOneToOne1Phase
+
 class HeatTransferFromHeatStructure3D1Phase(Component):
     def __init__(self, name = "", heat_flux_perimeter = 0., boundary = "", \
         flow_channels = None, heat_structure = None, **kwargs):

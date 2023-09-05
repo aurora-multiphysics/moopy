@@ -94,6 +94,12 @@ class HeatStructureFromFile3D(Component):
         self.position = position
         self.type = ComponentType.HeatStructureFromFile3D
 
+class HeatTransferFromExternalAppTemperature1Phase(Component):
+    def __init__(self, name:str, flow_channel:str, **kwargs):
+        super().__init__(name, **kwargs)
+        self.flow_channel = flow_channel
+        self.type = ComponentType.HeatTransferFromExternalAppTemperature1Phase
+
 class HSBoundaryRadiation(Component):
     def __init__(self, name, t_ambient = 300.0, boundary = [], \
         emissivity = 0.0, heat_structure = "",  **kwargs):

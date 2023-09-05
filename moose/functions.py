@@ -82,18 +82,9 @@ class ParsedFunction(GenericFunction):
         return string
 
 class PiecewiseLinear(GenericFunction):
-    def __init__(self,name = "", function = None):
-        super().__init__(name)
+    def __init__(self,name = "", **kwargs):
+        super().__init__(name, **kwargs)
         self.type = MooseFunctionTypes.PiecewiseLinear
-        self.function = function
-
-    def __str__(self):
-        string = f'[{self.name}]\n'
-        string += f'type={self.type.name}\n'
-        string += self.function.__str__()
-        string += '[]\n'
-        
-        return string
 
 class Functions:
     def __init__(self):

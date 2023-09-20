@@ -136,7 +136,7 @@ class FlowChannel1Phase(Component):
         # self.closures = closures # removed kwargs since it can be declared in GlobalParams
         # self.fp = fp
         self.length = length
-        self.n_elems = n_elems
+        self.n_elems = int(n_elems)
         self.orientation = orientation
         self.position = position
         self.type = ComponentType.FlowChannel1Phase
@@ -146,14 +146,26 @@ class InletMassFlowRateTemperature1Phase(Component):
         m_dot = 0.,  **kwargs):
         super().__init__(name,**kwargs)
         self.T = temperature
-        self.input = f'{input.name}:in'
+        if type(input) == str:
+            if ":in" in input:
+                self.input = input
+            else:
+                raise ValueError(f"input string '{input}' does not contain ':in'")
+        else:
+            self.input = f'{input.name}:in'
         self.m_dot = m_dot        
         self.type = ComponentType.InletMassFlowRateTemperature1Phase
 
 class Outlet1Phase(Component):
     def __init__(self, name = "", input = None, pressure = 0, **kwargs):
         super().__init__(name, **kwargs)
-        self.input = f'{input.name}:out'
+        if type(input) == str:
+            if ":out" in input:
+                self.input = input
+            else:
+                raise ValueError(f"input string '{input}' does not contain ':out'")
+        else:
+            self.input = f'{input.name}:in'
         self.p = pressure
         self.type = ComponentType.Outlet1Phase
 

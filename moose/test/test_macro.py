@@ -105,12 +105,60 @@ def test_boundaryconditions():
         
     print(bcs)
 
+def test_components():
+    from moose.components import (
+        Components,
+        FlowChannel1Phase,
+        InletMassFlowRateTemperature1Phase,
+        Outlet1Phase,
+        JunctionOneToOne1Phase,
+        VolumeJunction1Phase,
+        HeatTransferFromExternalAppTemperature1Phase,
+        HeatTransferFromSpecifiedTemperature1Phase
+    )
+    components = {}
+    component = FlowChannel1Phase(
+        name="pipe1",
+        position=[0,0,0],
+        orientation=[1, 0, 0],
+        length=1.0,
+        n_elems=20,
+        A=0.1,
+        D_h=1,
+        f=0.01,
+    )
+    components[component.name] = component
+    component = HeatTransferFromSpecifiedTemperature1Phase("heattrans", "pipe1", 300.0)
+    components[component.name] = component
+    component = HeatTransferFromExternalAppTemperature1Phase("heattrans", "pipe1")
+    components[component.name] = component
+    component = InletMassFlowRateTemperature1Phase("inlet", temperature=300, input="pipe1:in", m_dot=10.0)
+    component = InletMassFlowRateTemperature1Phase("inlet", temperature=300, input=components["pipe1"], m_dot=10.0)
+    components[component.name] = component
+    try:
+        component = InletMassFlowRateTemperature1Phase("inlet", temperature=300, input="pipe1", m_dot=10.0)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("Missed ValueError for InletMassFlowRateTemperature1Phase with incorrect kwarg 'input'")
+
+    component = VolumeJunction1Phase("junction1", "pipe1:in pipe2:out", volume=10.0, position=[1,0,0])
+    components[component.name] = component
+    component = JunctionOneToOne1Phase("junction1", "pipe1:in pipe2:out")
+    components[component.name] = component
+    component = Outlet1Phase("outlet", "pipe1:out", 1e5)
+    components[component.name] = component
+
+    comps = Components()
+    comps.components = components
+    print(comps)
+
 def test_materials():
     from moose.variables import Variables
     variables = Variables()
     variables.add_variable("temperature",1,1,"")
     
-    from moose.functions import ParsedFunction, PolynomialFunction, PiecewiseFunction
+    from moose.functions import ParsedFunction, PolynomialFunction, PiecewiseFunction, PiecewiseLinear
     poly = PolynomialFunction([variables.variables["temperature"],0.0,0.0, \
                                variables.variables["temperature"]], \
                                coefficients=[1.,2.,3.,4.,5.])
@@ -123,13 +171,16 @@ def test_materials():
                       variable=variables.variables["temperature"])
 
     piece = PiecewiseFunction("sh",[300,500],[10,12])
+    piece_linear = PiecewiseLinear("sh", axis="x", x=[300,500],y=[10,12])
     mats.add_material("name2",type=1,block="block1",data=piece,property="thermal_conductivity", \
                       variable=variables.variables["temperature"])
     mats.add_material("name3",type=3,block="block1",specific_heat=piece,thermal_conductivity=piece, \
+                      variable=variables.variables["temperature"])
+    mats.add_material("name4",type=3,block="block1",specific_heat=piece_linear,thermal_conductivity=piece_linear, \
                       variable=variables.variables["temperature"])
     print(mats)
 
 def test_outputs():
     from moose.outputs import Outputs
-    output = Outputs(csv=True,exodus=True)
+    output = Outputs(csv=True,exodus=True,print_linear_residuals=False)
     print(output)

@@ -13,5 +13,7 @@ class GlobalParameters():
                 string += f'displacements="{displacements}"\n'
             if key == "volumetric_locking_correction":
                 string += f'volumetric_locking_correction=true\n'
+            else:
+                string += f'{key}="{self.members[key]}"\n'
         string += '[]\n'
         return string

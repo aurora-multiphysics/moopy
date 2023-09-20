@@ -120,14 +120,14 @@ class HSBoundaryHeatFlux(Component):
         self.type = ComponentType.HSBoundaryHeatFlux
 
 class FlowChannel1Phase(Component):
-    def __init__(self, name = "", A = 0., closures = None, fp  = None, \
+    def __init__(self, name = "", A = 0., \
         length = 0 , n_elems = 1, orientation = [1,0,0], \
         position = [0,0,0], **kwargs):
 
         super().__init__(name, **kwargs)
         self.A = A
-        self.closures = closures
-        self.fp = fp
+        # self.closures = closures # removed kwargs since it can be declared in GlobalParams
+        # self.fp = fp
         self.length = length
         self.n_elems = n_elems
         self.orientation = orientation

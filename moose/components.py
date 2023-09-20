@@ -100,6 +100,13 @@ class HeatTransferFromExternalAppTemperature1Phase(Component):
         self.flow_channel = flow_channel
         self.type = ComponentType.HeatTransferFromExternalAppTemperature1Phase
 
+class HeatTransferFromSpecifiedTemperature1Phase(Component):
+    def __init__(self, name:str, flow_channel:str, T_wall:float, **kwargs):
+        super().__init__(name, **kwargs)
+        self.flow_channel = flow_channel
+        self.T_wall = T_wall
+        self.type = ComponentType.HeatTransferFromSpecifiedTemperature1Phase
+
 class HSBoundaryRadiation(Component):
     def __init__(self, name, t_ambient = 300.0, boundary = [], \
         emissivity = 0.0, heat_structure = "",  **kwargs):

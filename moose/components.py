@@ -165,7 +165,7 @@ class Outlet1Phase(Component):
             else:
                 raise ValueError(f"input string '{input}' does not contain ':out'")
         else:
-            self.input = f'{input.name}:in'
+            self.input = f'{input.name}:out'
         self.p = pressure
         self.type = ComponentType.Outlet1Phase
 

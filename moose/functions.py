@@ -62,8 +62,34 @@ class PolynomialFunction:
         return string
 
 class GenericFunction:
-    def __init__(self, name = ""):
+    def __init__(self, name = "", **kwargs):
         self.name = name
+
+        # set the kwargs into names        
+        for arg in kwargs.keys():
+            self.__setattr__(arg, kwargs[arg])
+    
+    def __str__(self):
+        string =  f'[{self.name}]\n'
+        string += f'type={self.type.name}\n'
+        
+        objects = ["name", "type"]
+        
+        for key in self.__dict__.keys():
+            if key not in objects:
+                data = self.__dict__[key]
+                if isinstance(data,list):
+                    if hasattr(data[0], '__dict__'):
+                        data = [x.name for x in data]
+                    else:
+                        data = [str(x) for x in data]
+                    data = ' '.join(data)
+                if hasattr(data, '__dict__'):
+                    data = data.name
+                string += f'{key}="{data}"\n'
+
+        string += '[]\n'
+        return string
 
 class ParsedFunction(GenericFunction):
     def __init__(self,name = "", function = None):
@@ -82,18 +108,9 @@ class ParsedFunction(GenericFunction):
         return string
 
 class PiecewiseLinear(GenericFunction):
-    def __init__(self,name = "", function = None):
-        super().__init__(name)
+    def __init__(self,name = "", **kwargs):
+        super().__init__(name, **kwargs)
         self.type = MooseFunctionTypes.PiecewiseLinear
-        self.function = function
-
-    def __str__(self):
-        string = f'[{self.name}]\n'
-        string += f'type={self.type.name}\n'
-        string += self.function.__str__()
-        string += '[]\n'
-        
-        return string
 
 class Functions:
     def __init__(self):

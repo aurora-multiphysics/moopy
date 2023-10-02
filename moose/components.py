@@ -94,6 +94,19 @@ class HeatStructureFromFile3D(Component):
         self.position = position
         self.type = ComponentType.HeatStructureFromFile3D
 
+class HeatTransferFromExternalAppTemperature1Phase(Component):
+    def __init__(self, name:str, flow_channel:str, **kwargs):
+        super().__init__(name, **kwargs)
+        self.flow_channel = flow_channel
+        self.type = ComponentType.HeatTransferFromExternalAppTemperature1Phase
+
+class HeatTransferFromSpecifiedTemperature1Phase(Component):
+    def __init__(self, name:str, flow_channel:str, T_wall:float, **kwargs):
+        super().__init__(name, **kwargs)
+        self.flow_channel = flow_channel
+        self.T_wall = T_wall
+        self.type = ComponentType.HeatTransferFromSpecifiedTemperature1Phase
+
 class HSBoundaryRadiation(Component):
     def __init__(self, name, t_ambient = 300.0, boundary = [], \
         emissivity = 0.0, heat_structure = "",  **kwargs):
@@ -114,16 +127,16 @@ class HSBoundaryHeatFlux(Component):
         self.type = ComponentType.HSBoundaryHeatFlux
 
 class FlowChannel1Phase(Component):
-    def __init__(self, name = "", A = 0., closures = None, fp  = None, \
+    def __init__(self, name = "", A = 0., \
         length = 0 , n_elems = 1, orientation = [1,0,0], \
         position = [0,0,0], **kwargs):
 
         super().__init__(name, **kwargs)
         self.A = A
-        self.closures = closures
-        self.fp = fp
+        # self.closures = closures # removed kwargs since it can be declared in GlobalParams
+        # self.fp = fp
         self.length = length
-        self.n_elems = n_elems
+        self.n_elems = int(n_elems)
         self.orientation = orientation
         self.position = position
         self.type = ComponentType.FlowChannel1Phase
@@ -133,16 +146,44 @@ class InletMassFlowRateTemperature1Phase(Component):
         m_dot = 0.,  **kwargs):
         super().__init__(name,**kwargs)
         self.T = temperature
-        self.input = f'{input.name}:in'
+        if type(input) == str:
+            if ":in" in input:
+                self.input = input
+            else:
+                raise ValueError(f"input string '{input}' does not contain ':in'")
+        else:
+            self.input = f'{input.name}:in'
         self.m_dot = m_dot        
         self.type = ComponentType.InletMassFlowRateTemperature1Phase
 
 class Outlet1Phase(Component):
     def __init__(self, name = "", input = None, pressure = 0, **kwargs):
         super().__init__(name, **kwargs)
-        self.input = f'{input.name}:out'
+        if type(input) == str:
+            if ":out" in input:
+                self.input = input
+            else:
+                raise ValueError(f"input string '{input}' does not contain ':out'")
+        else:
+            self.input = f'{input.name}:out'
         self.p = pressure
         self.type = ComponentType.Outlet1Phase
+
+class VolumeJunction1Phase(Component):
+    def __init__(self, name, connections, volume, position, **kwargs):
+        super().__init__(name, **kwargs)
+        self.name = name
+        self.volume = volume
+        self.position = position
+        self.connections = connections
+        self.type = ComponentType.VolumeJunction1Phase
+
+class JunctionOneToOne1Phase(Component):
+    def __init__(self, name, connections, **kwargs):
+        super().__init__(name, **kwargs)
+        self.name = name
+        self.connections = connections
+        self.type = ComponentType.JunctionOneToOne1Phase
 
 class HeatTransferFromHeatStructure3D1Phase(Component):
     def __init__(self, name = "", heat_flux_perimeter = 0., boundary = "", \

@@ -10,8 +10,13 @@ class Outputs():
         for key in self.outputs.keys():
             if key == "exodus":
                 string += 'exodus=true\n'
-            if key == "csv":
+            elif key == "csv":
                 string += 'csv=true\n'
-    
+            else:
+                value = self.outputs[key]
+                if type(value) is bool:
+                    value = str(value).lower()
+                string += f'{key}={value}\n'
+
         string += '[]\n'
         return string

@@ -158,7 +158,7 @@ class ParsedAux(AuxKernel):
         string  = f'[{self.name}]\n'
         string += f'type={self.aux_kernel_type.name}\n'
         string += f'variable={self.variable.name}\n'
-        string += f'{self.function.__str__()}'
+        string += f'function={self.function.__str__()}\n'
         string += f'args={self.args.name}\n'
         string += '[]\n'
         return string

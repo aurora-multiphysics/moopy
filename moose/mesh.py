@@ -18,13 +18,16 @@ class MeshObject():
         self.name = name
 
 class FileMeshGenerator(MeshObject):
-    def __init__(self, name = "", **kwargs):
+    def __init__(self, name="", **kwargs):
         super().__init__(name, **kwargs)
         self.mesh_object_type = MeshObjectTypes.FileMeshGenerator
         self.filename = kwargs.pop('filename')
         self.clear_spline_nodes = False
+        self.show_info = False
         if 'clear_spline_nodes' in kwargs.keys():
             self.clear_spline_nodes = True
+        if 'show_info' in kwargs.keys():
+            self.show_info = True
     
     def __str__(self):
         string  = f'[{self.name}]\n'
@@ -32,6 +35,8 @@ class FileMeshGenerator(MeshObject):
         string += f'file={self.filename}\n'
         if self.clear_spline_nodes:
             string += 'clear_spline_nodes=true\n'
+        if self.show_info:
+            string += 'show_info=true\n'
         string += '[]\n'
         return string
 
@@ -88,11 +93,14 @@ class Mesh():
     def add_mesh_object(self, name = "", type = None, **kwargs):
         if name in self.mesh_objects.keys():
             print (f'name {name} already in use')
-
+            
+        mesh = None  # Add a default value for the 'mesh' variable
+        
         if type == MeshObjectTypes.FileMeshGenerator:
             mesh = FileMeshGenerator(name=name, **kwargs)
         elif type == MeshObjectTypes.TransformGenerator:
             mesh = TransformGenerator(name=name, **kwargs)
         
-        self.mesh_objects[name] = mesh
+        if mesh is not None:
+            self.mesh_objects[name] = mesh
         
